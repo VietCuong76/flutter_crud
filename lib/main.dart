@@ -4,22 +4,34 @@ import 'component/modal_bottom.dart';
 import 'modules/items.dart';
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     debugShowCheckedModeBanner: false,
     home: MyApp(),
   ));
 }
 
-class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
 
-  final List<DataItems> items = [
-    DataItems(id: 1, name: 'Lê Viết Cường'),
-    DataItems(id: 2, name: 'Phạm Văn Quý'),
-    DataItems(id: 3, name: 'Nguyễn Vũ Quốc'),
-    DataItems(id: 4, name: 'Nguyễn Minh Toàn'),
-    DataItems(id: 5, name: 'Thành Lê')
-  ];
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final List<DataItems> items = [];
+
+  void _handlerData(String name) {
+    final newItem = DataItems(id: DateTime.now().toString(), name: name);
+    setState(() {
+      items.add(newItem);
+    });
+  }
+
+  void _handlerDeleted(String id) {
+    setState(() {
+      items.removeWhere((item) => item.id == id);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +50,7 @@ class MyApp extends StatelessWidget {
           children: items
               .map((item) => CardBody(
                     item: item,
+                    handleDeleted: _handlerDeleted,
                   ))
               .toList(),
         ),
@@ -50,7 +63,7 @@ class MyApp extends StatelessWidget {
             isScrollControlled: true,
             context: context,
             builder: (BuildContext context) {
-              return const ModalBottom();
+              return ModalBottom(addTask: _handlerData);
             },
           );
         },

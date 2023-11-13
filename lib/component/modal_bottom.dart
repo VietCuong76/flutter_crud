@@ -1,9 +1,22 @@
 import 'package:flutter/material.dart';
 
 class ModalBottom extends StatelessWidget {
-  const ModalBottom({
+  ModalBottom({
     super.key,
+    required this.addTask,
   });
+  String textChange = '';
+  TextEditingController controller = TextEditingController();
+
+  final Function addTask;
+  void _handlerChange(BuildContext context) {
+    final name = controller.text;
+    if (name.isEmpty) {
+      return;
+    }
+    addTask(name);
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,16 +25,18 @@ class ModalBottom extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         height: 200,
-        color: Colors.amber,
+        color: Colors.white,
         child: Column(children: [
-          const TextField(
-            decoration: InputDecoration(
+          TextField(
+            controller: controller,
+            // onChanged: (value) => textChange = value,
+            decoration: const InputDecoration(
                 border: OutlineInputBorder(), labelText: 'Your task'),
           ),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () => _handlerChange(context),
                 child: const Text(
                   'Add',
                 )),
